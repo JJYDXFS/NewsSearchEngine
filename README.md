@@ -28,3 +28,9 @@ create index for news document and provide a search interface
 > input1: '孩子' 'AND' '教育'
 >
 > input2: '学生' ANDNOT '孩子'
+
+## 人机检索界面
+
+### 前端
+
+### 后端
