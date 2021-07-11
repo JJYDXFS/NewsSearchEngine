@@ -1,0 +1,78 @@
+<!-- 
+    @Author: JJYDXFS
+    @Date: 11 July 2021
+    @refer: https://blog.csdn.net/qq_38387487/article/details/78854036
+ -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ search_exp }}</title>
+    <script type="text/javascript" src="jquery.min.js"></script>
+    <style type="text/css">  
+        .table{border:solid #378bec; border-width:1px 0px 0px 1px;width: 100%;font-size: 12px;line-height: 21px;text-align:center;}  
+        .table thead td{border:solid #378bec; border-width:0px 1px 1px 0px;}  
+        .table tbody td{border:solid #378bec; border-width:0px 1px 1px 0px;padding-right: 5px;padding-left: 5px;}
+        
+        .page-button{
+            margin: 1%;
+        }
+        .result-box{
+
+        }  
+    </style>
+</head>
+<body>
+    <div style="width:80%;margin:0 auto;">  
+        <div id="result_container" style="width:80%;margin:0 auto;">  
+            
+        </div>  
+        <br/>  
+        <div id="page" style="width:80%;margin:0 auto;">
+        </div>  
+    </div>
+    <script>
+        // 异步获取后台搜索结果
+        var result_data = '{{ result_data | list }}';
+        console.log(result_data);
+        // 将搜索结果渲染到
+        // for(let i = 0; i < result_data.length; i++){
+        //     console.log(result_data)
+        // }
+
+        $(function(){  
+            var Count = pageData.length; //记录条数  
+            var PageSize=5; //设置每页示数目  
+            var PageCount=Math.ceil(Count/PageSize); //计算总页数  
+            var currentPage =1; //当前页，默认为1  
+
+            //分页按钮  
+            for(var i=1;i<=PageCount;i++){  
+                var pageN='<a href="#" class="page-button" selectPage="'+i+'" > '+i+' </a>';  
+                $('#page').append(pageN);  
+            }
+            // 上一页/下一页按钮
+
+            //显示默认页（第一页）  
+            $('#result_container').empty().append(head);  
+            for(i=(currentPage-1)*PageSize;i<PageSize*currentPage;i++){    
+                $('#result_container').append(pageData[i]);  
+            }
+            $('#result_container').append(end);  
+            
+            //显示选择页的内容  
+            $('a').click(function(){  
+            var selectPage=$(this).attr('selectPage');  
+            $('#result_container').html('');  
+                $('#result_container').append(head);  
+                for(i=(selectPage-1)*PageSize;i<PageSize*selectPage;i++){  
+                    $('#result_container').append(pageData[i]);  
+                }  
+                $('#result_container').append(end);  
+            });
+        });
+    </script>  
+</body>
+</html>
