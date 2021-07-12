@@ -1,13 +1,19 @@
-# NewsSearchEngine
-create index for news document and provide a search interface
+# NewsSearchEngine —— 105℃ 新闻搜索引擎
+create index for news document and provide a simple search interface
 
 ## 建立倒排索引
 
-### 预处理
+语料库：Sogou 17900条 中文新闻文本
 
-### 基于内存
+### 0. 预处理
 
-### 基于磁盘
+替换奇怪字符/分词/去停词等等
+
+### 1. 基于内存
+
+### 2. 基于磁盘
+
+分块处理
 
 ## 布尔检索
 
@@ -29,20 +35,31 @@ create index for news document and provide a search interface
 >
 > input2: '学生' ANDNOT '孩子'
 
+## TF-IDF排序
+
+tf与idf值在建立倒排索引时已经处理过，此处直接使用
+
 ## 人机检索界面
 
 ### 前端
 
-基本可以实现翻页
+- 实现翻页
 
-采用前后端半分离的数据传输形式
 
-依然由flask实现动态路由
+- 采用前后端半分离的数据传输形式
 
-遇到的问题：从数据库读数据似乎会导致一种特殊符号 \&#39; 好像是空格？
 
-似乎是jinjia2对字符串的解析有问题，会把引号解析成这个特殊符号
+- flask实现动态路由
 
-找到一个解决方法：在js里直接使用python数据，似乎这也是jinjia使用的推荐方法。果然一种工具就会有自己的设计思想，“不听话”就寸步难行  23:24 安心睡觉！
 
 ### 后端
+
+接 布尔检索 和 TF-IDF排序 算法，并负责生成动态页面所需数据
+
+### MySQL数据库
+
+为了提供检索结果摘要，把每篇文档的前65字符存在数据库中，方便后端取数据
+
+## 说在后面的话
+
+时间紧，前端页面写得很拉😅 css/js都挤一个页面里了，函数也写得稀碎，有机会再调整（ Maybe 也没有机会了

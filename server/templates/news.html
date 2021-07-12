@@ -1,12 +1,31 @@
+<!-- 
+    @Author: JJYDXFS
+    @Date: 12 July 2021
+ -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>文档 {{ DocID }}</title>
+    <title>新闻 {{ DocID }}</title>
     <script src="static/js/jquery.min.js"></script>
     <style type="text/css">
+
+        body{
+            background: url("/static/img/logobg.png");
+            background-color:transparent;
+            background-repeat:no-repeat;
+            background-size: 100%;
+        }
+
+        .top{
+            margin-top: 5%;
+        }
+
+        .center{
+            text-align: center;
+        }
 
         .layout{
             width:80%;
@@ -20,7 +39,10 @@
     </style>
 
 </head>
-<body>
+<body >
+    <div class="center top">
+        <h1>新闻 {{ DocID }}</h1>
+    </div>
     <div class="layout content" id="content-box">
         <p>{{ content }}</p>
     </div>

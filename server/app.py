@@ -1,3 +1,7 @@
+'''
+@Author: JJYDXFS
+@Date: 12 July 2021
+'''
 from flask import Flask, request, render_template, jsonify, redirect
 from flask_cors import *
 
@@ -20,11 +24,6 @@ word_table = np.load('./static/data/word_table.npy',allow_pickle=True)[()] # 读
 db_mysql = MySQLDB(host='localhost', user='root', password='618618', database='test') # 链接数据库
 corpus_path = 'F:\\OneDrive\\Documents\\ThirdYear\\MediaDataAnalysis\\SearchEngine\\data\\Sogou\\' # 文本语料路径
 
-# GET
-# -------------------------------------------------------------------------------------------------
-
-
-
 # 页面路由
 # -------------------------------------------------------------------------------------------------
 
@@ -34,9 +33,8 @@ def index():
     '''
     主页
     '''
-    # 提供搜索框，简洁一点，可加logo...
-    hello = "test"
-    return render_template("index.html", hello = hello)
+    # 提供搜索框，简洁，logo
+    return render_template("index.html")
 
 # 新闻内容页
 @app.route('/news=<DocID>')
@@ -54,16 +52,21 @@ def direct_to_search_page(search_exp):
     '''
     搜索结果详细页面
     '''
-    # 进行布尔检索
-    search_result, word_set = calc_bool_exp(str(search_exp).split(' '))
-    # 对检索结果排序
-    sorted_result = tfidf_sort(search_result, word_set)
-    # 获得文档detail
-    doc_detail = get_doc_detail(search_result)
-    # 生成返回信息
-    result_data = gen_result_data(sorted_result, doc_detail)
-    # 返回生成信息
-    return render_template("search.html", search_exp = search_exp ,amount = len(result_data), result_data = result_data)
+    result_data = []
+    try:
+        # 进行布尔检索
+        search_result, word_set = calc_bool_exp(str(search_exp).split(' '))
+        # 对检索结果排序
+        sorted_result = tfidf_sort(search_result, word_set)
+        # 获得文档detail
+        doc_detail = get_doc_detail(search_result)
+        # 生成返回信息
+        result_data = gen_result_data(sorted_result, doc_detail)
+    except Exception as e:
+        print("Error: 检索异常")
+    finally:
+        # 返回生成信息
+        return render_template("search.html", search_exp = search_exp ,amount = len(result_data), result_data = result_data)
 
 # 功能函数
 # -------------------------------------------------------------------------------------------------
@@ -263,7 +266,7 @@ def gen_result_data(sorted_result, doc_detail):
     result_data=[]
 
     for (doc, tfidf) in sorted_result:
-        result_data.append(["文档 "+str(doc),get_url(doc), doc_detail[doc]])
+        result_data.append(["新闻 "+str(doc),get_url(doc), doc_detail[doc], round(tfidf, 10)])
     
     return result_data
 

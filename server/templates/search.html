@@ -14,20 +14,49 @@
     <style type="text/css">
 
         .layout{
-            width:80%;
+            width:75%;
             margin:0 auto;
         }
 
         .search input{
+            width: 86%;
             height: 30px;
             border-width: 2.5px;
             border-color: darkgrey;
             border-radius: 5%;
+            font-size: 18px;
+        }
+
+        .logo{
+            /* margin-left: 1%; */
+            width: 12.5%; 
+            float: left;
+        }
+
+        .button {
+            margin-top: 1%;
+            height: 35px;
+            width: 12%;
+            background-color: #3c72b8;
+            border: none;
+            border-radius: 5%;
+            color: white;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 18px;
+            cursor: pointer;
+        }
+
+        .top{
+            margin-top: 2%;
         }
 
         .amount{
             margin-top: 2%;
             margin-bottom: 2%;
+            font-size: 16px;
+            color: rgb(184, 184, 184);
         }
 
         a:link{ /* 指正常的未被访问过的链接*/
@@ -52,20 +81,34 @@
         }
 
         .result-item a{
-            font-size: 20px;
+            font-size: 24px;
         }
         
-        .result-item p{
+        .content{
             font-size: 16px;
+            margin-bottom: 0%;
+        }
+
+        .tfidf{
+            margin-top: 1%;
+            padding-bottom: 2%;
+            font-size: 14px;
+            color: rgb(184, 184, 184);
         }
     </style>
 </head>
 <body>
-    <div class="layout">
+    <div class="layout top">
         <div>
             <div> <!-- 搜索框 -->
+                <div>
+                    <a href="http://localhost:5000/">
+                        <img src="/static/img/logo.png" class="logo"/>
+                    </a>
+                </div>
                 <div class="search layout">
-                    <input type="text" name="search" id="search" value='{{ search_exp }}'> 
+                    <input type="text" name="search" id="search" value='{{ search_exp }}'>
+                    <button class="button" onclick="Search()">沸腾一下</button>
                 </div>
             </div>
             <div class="layout amount"> <!-- 搜索结果数 -->
@@ -84,13 +127,17 @@
         var pageData=[];
         
         // 获取后台搜索结果
+        {% if amount != 0 %}
+
         {% for result in result_data %}
             var data = '<div class="result-item">' +
-                '<a href={{ result[1] }}> {{ result[0] }} </a>' +
-                '<p> {{ result[2] }}... </p>' +
+                '<a href={{ result[1] }} target="_blank" class="result"> {{ result[0] }} </a>' +
+                '<p class="content"> {{ result[2] }}... </p>' +
+                '<p class="tfidf"> 相关度：{{ result[3] }} </p>'
                 '</div>';
             pageData.push(data);
         {% endfor %}
+        {% endif %}
 
         $('#search').on('keypress',function(event){
         // 搜索框回车跳转到搜索结果页
@@ -100,6 +147,19 @@
                 window.location.href=url;
             }  
         });
+
+        function Search(event){
+            // 搜索按钮跳转到搜索结果页
+            let keyword = $('#search').val();
+            
+            if (keyword == ""){
+                window.location.href=window.location.href;
+            }
+            else{
+                let url = "http://"+ip+":5000/search="+keyword;
+                window.location.href=url;
+            }
+        }
 
         $(function(){  // 翻页功能
             var Count = pageData.length; //记录条数  
@@ -112,17 +172,24 @@
                 var pageN='<a href="#" class="page-button" selectPage="'+i+'" > '+i+' </a>';  
                 $('#page').append(pageN);  
             }
-            // 上一页/下一页按钮
 
             //显示默认页（第一页）  
-            $('#result_container').empty(); 
             for(i=(currentPage-1)*PageSize;i<PageSize*currentPage;i++){    
                 $('#result_container').append(pageData[i]);  
             }
+            $("#page a:first").attr('style','color:#e71f1f'); // 第一个页码变色
             
-            //显示选择页的内容  
-            $('a').click(function(){ 
+            //显示选择页的内容
+            $('.page-button').click(function(){
+
+                $('.page-button').each(function(){ // 其他页码不变
+                    $(this).attr('style','color:#2a38b5');
+                });
+
+                $(this).attr('style','color:#e71f1f'); // 当前页码变色
+                
                 var selectPage=$(this).attr('selectPage'); 
+
                 $('#result_container').html('');  
                     for(i=(selectPage-1)*PageSize;i<PageSize*selectPage;i++){  
                         $('#result_container').append(pageData[i]);  
