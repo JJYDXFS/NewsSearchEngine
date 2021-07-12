@@ -5,11 +5,17 @@ create index for news document and provide a simple search interface
 
 语料库：Sogou 17900条 中文新闻文本
 
+文档从1开始重命名，对应DocID
+
 ### 0. 预处理
 
-替换奇怪字符/分词/去停词等等
+替换特殊字符/分词/去停词等等
 
 ### 1. 基于内存
+
+倒排索引文件 invert_table.npy 以字典形式保存倒排记录
+
+词项表 word_table.npy 以字典形式保存idf值
 
 ### 2. 基于磁盘
 
