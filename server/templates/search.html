@@ -10,41 +10,100 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ search_exp }}</title>
-    <script type="text/javascript" src="jquery.min.js"></script>
-    <style type="text/css">  
-        .table{border:solid #378bec; border-width:1px 0px 0px 1px;width: 100%;font-size: 12px;line-height: 21px;text-align:center;}  
-        .table thead td{border:solid #378bec; border-width:0px 1px 1px 0px;}  
-        .table tbody td{border:solid #378bec; border-width:0px 1px 1px 0px;padding-right: 5px;padding-left: 5px;}
+    <script src="static/js/jquery.min.js"></script>
+    <style type="text/css">
+
+        .layout{
+            width:80%;
+            margin:0 auto;
+        }
+
+        .search input{
+            height: 30px;
+            border-width: 2.5px;
+            border-color: darkgrey;
+            border-radius: 5%;
+        }
+
+        .amount{
+            margin-top: 2%;
+            margin-bottom: 2%;
+        }
+
+        a:link{ /* 指正常的未被访问过的链接*/
+            text-decoration:none;
+            color:#2a38b5;
+        }  
+        a:visited{ /*指已经访问过的链接*/
+            text-decoration:none;
+            color:#2a38b5; 
+        }
+        a:hover{ /*指鼠标在链接上*/
+            text-decoration:underline;
+            color:#3a70ae;
+        }
+        a:active{ /* 指正在点的链接*/ 
+            text-decoration:underline;
+            color:#e71f1f;
+        }
         
         .page-button{
             margin: 1%;
         }
-        .result-box{
 
-        }  
+        .result-item a{
+            font-size: 20px;
+        }
+        
+        .result-item p{
+            font-size: 16px;
+        }
     </style>
 </head>
 <body>
-    <div style="width:80%;margin:0 auto;">  
-        <div id="result_container" style="width:80%;margin:0 auto;">  
+    <div class="layout">
+        <div>
+            <div> <!-- 搜索框 -->
+                <div class="search layout">
+                    <input type="text" name="search" id="search" value='{{ search_exp }}'> 
+                </div>
+            </div>
+            <div class="layout amount"> <!-- 搜索结果数 -->
+                为您找到相关新闻 {{ amount }} 条
+            </div>
+        </div>  
+        <div id="result_container" class="layout">  
             
         </div>  
         <br/>  
-        <div id="page" style="width:80%;margin:0 auto;">
+        <div id="page" class="layout">
         </div>  
     </div>
     <script>
-        // 异步获取后台搜索结果
-        var result_data = '{{ result_data | list }}';
-        console.log(result_data);
-        // 将搜索结果渲染到
-        // for(let i = 0; i < result_data.length; i++){
-        //     console.log(result_data)
-        // }
+        var ip="localhost";
+        var pageData=[];
+        
+        // 获取后台搜索结果
+        {% for result in result_data %}
+            var data = '<div class="result-item">' +
+                '<a href={{ result[1] }}> {{ result[0] }} </a>' +
+                '<p> {{ result[2] }}... </p>' +
+                '</div>';
+            pageData.push(data);
+        {% endfor %}
 
-        $(function(){  
+        $('#search').on('keypress',function(event){
+        // 搜索框回车跳转到搜索结果页
+            if(event.keyCode == 13)      
+            {  
+                var url = "http://"+ip+":5000/search="+$('#search').val()
+                window.location.href=url;
+            }  
+        });
+
+        $(function(){  // 翻页功能
             var Count = pageData.length; //记录条数  
-            var PageSize=5; //设置每页示数目  
+            var PageSize=10; //设置每页示数目  
             var PageCount=Math.ceil(Count/PageSize); //计算总页数  
             var currentPage =1; //当前页，默认为1  
 
@@ -56,21 +115,18 @@
             // 上一页/下一页按钮
 
             //显示默认页（第一页）  
-            $('#result_container').empty().append(head);  
+            $('#result_container').empty(); 
             for(i=(currentPage-1)*PageSize;i<PageSize*currentPage;i++){    
                 $('#result_container').append(pageData[i]);  
             }
-            $('#result_container').append(end);  
             
             //显示选择页的内容  
-            $('a').click(function(){  
-            var selectPage=$(this).attr('selectPage');  
-            $('#result_container').html('');  
-                $('#result_container').append(head);  
-                for(i=(selectPage-1)*PageSize;i<PageSize*selectPage;i++){  
-                    $('#result_container').append(pageData[i]);  
-                }  
-                $('#result_container').append(end);  
+            $('a').click(function(){ 
+                var selectPage=$(this).attr('selectPage'); 
+                $('#result_container').html('');  
+                    for(i=(selectPage-1)*PageSize;i<PageSize*selectPage;i++){  
+                        $('#result_container').append(pageData[i]);  
+                    }  
             });
         });
     </script>  

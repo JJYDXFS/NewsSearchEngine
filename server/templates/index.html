@@ -4,13 +4,88 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>105℃</title>
+    <script src="static/js/jquery.min.js"></script>
+    <style type="text/css">
+        .center{
+            text-align: center;
+        }
+        .layout{
+            width:80%;
+            margin:0 auto;
+        }
+
+        .top{
+            margin-top: 3%;
+        }
+
+        .search input{
+            margin-top: 3%;
+            height: 80px;
+            width: 75%;
+            border-width: 2.5px;
+            border-color: darkgrey;
+            border-radius: 5%;
+            padding-left: 1%;
+            font-size: 35px;
+            float: left;
+        }
+
+        .button {
+            margin-top: 3%;
+            height: 85px;
+            width: 20%;
+            background-color: #3c72b8;
+            border: none;
+            border-radius: 5%;
+            color: white;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 35px;
+            cursor: pointer;
+        }
+    </style>
+
 </head>
 <body>
+
+    <div class="layout top"> <!-- 搜索框 -->
+            <div class="center">
+                <img src="/static/img/logo.png" style="width: 40%" class="layout"/>
+            </div>
+    
+        <div class="search layout center">
+            <input type="text" name="search" id="search" value='{{ search_exp }}'>
+            <button class="button" onclick="Search()">沸腾一下</button> 
+        </div>
+    </div>
+
     <script>
-        var hi;
-        hi = "{{ hello }}";
-        alert(hi);
+        var ip="localhost";
+
+        function Search(event){
+            // 搜索按钮跳转到搜索结果页
+            let keyword = $('#search').val();
+            
+            if (keyword == ""){
+                window.location.href=window.location.href;
+            }
+            else{
+                let url = "http://"+ip+":5000/search="+keyword;
+                window.location.href=url;
+            }
+        }
+
+        $('#search').on('keypress',function(event){
+            // 搜索框回车跳转到搜索结果页
+            if(event.keyCode == 13)      
+            {  
+                var url = "http://"+ip+":5000/search="+$('#search').val()
+                window.location.href=url;
+            }  
+        });
+
     </script>
 </body>
 </html>
