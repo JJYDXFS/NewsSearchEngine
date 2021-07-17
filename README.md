@@ -1,6 +1,13 @@
 # NewsSearchEngine —— 105℃ 新闻搜索引擎
 create index for news document and provide a simple search interface
 
+> 使用说明
+>
+> 1. 建立索引算法均放置在文档索引.ipynb文件中，可直接使用
+> 2. 自备文本语料库和文本预览所需.sql文件
+> 3. 修改程序中相关文件路径
+> 4. 进入server目录，启动flask服务器
+
 ## 建立倒排索引
 
 语料库：Sogou 17900条 中文新闻文本
