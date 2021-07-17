@@ -43,8 +43,27 @@ create index for news document and provide a simple search interface
 
 ## TF-IDF排序
 
-tf与idf值在建立倒排索引时已经处理过，此处直接使用
+tf与idf值在建立倒排索引时已经处理过，此处直接使。tf值计算如公式1，idf值计算如公式2，文档的相关度计算如公式3
+$$
+tf_{i,j}=\frac{n_{i,j}}{\sum_{k}n_{k,j}} \, \tag{1}
+$$
+$$
+n_{i,j}表示词项i在文档j中出现次数 \\
+k表示文档j中的词项总数
+$$
 
+$$
+idf_{i}=\ln{\frac{|D|}{|{j:t_i}\in{d_j}|+1}} \, \tag{2}
+$$
+$$
+|D|表示文档总数 \\
+|j|表示含有词项t_i的文档d_j的总数\\
+|j|+1是为了保证分母不为零
+$$
+
+$$
+tfidf=\sum_{i=1}^{n}tf_i*idf_i \, \tag{3}
+$$
 ## 人机检索界面
 
 ### 前端
